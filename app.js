@@ -6,6 +6,7 @@ class App{
 		const container = document.createElement( 'div' );
 		document.body.appendChild( container );
     
+        
         window.addEventListener('resize', this.resize.bind(this) );
 	}	
     
@@ -13,7 +14,7 @@ class App{
         
     }
     
-	render( ) {   
+	render( ) {  
         
     }
 }
