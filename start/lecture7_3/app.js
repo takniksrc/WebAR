@@ -48,8 +48,6 @@ class App{
     setupXR(){
         this.renderer.xr.enabled = true;
         
-        //TO DO 1: If navigator includes xr and immersive-ar is supported then show the ar-button class
-        
         if ( 'xr' in navigator ) {
 
 			navigator.xr.isSessionSupported( 'immersive-ar' ).then( ( supported ) => {
@@ -148,7 +146,6 @@ class App{
 	}			
     
     initAR(){
-        //TO DO 2: Start an AR session
         let currentSession = null;
         const self = this;
         
