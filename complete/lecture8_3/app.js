@@ -325,6 +325,7 @@ class App{
                     targets
                 });
                 
+                
                 self.bullet.addEventListener( 'hit', ev => {
                     const tmp = self.ghouls.filter( ghoul => ev.hitObject == ghoul.object.children[1] );
                     if (tmp.length>0){

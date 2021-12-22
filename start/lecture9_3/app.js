@@ -157,11 +157,24 @@ class App{
         }
         
         function showOption(){
-            
+            const options = self.questions.questions[questionIndex].options;
+            if (answerIndex<0) answerIndex = 0;
+            if (answerIndex>=options.length) answerIndex = options.length - 1;
+            let display = (answerIndex>0) ? "block" : "none";
+            self.ui.updateConfig("prev", "display", display);
+            display = (answerIndex<(options.length-1)) ? "block" : "none";
+            self.ui.updateConfig("next", "display", display);
+            self.ui.updateElement( "header", "Select a response");
+            self.ui.updateElement("panel", options[answerIndex].text);
         }
         
         function showQuestion(){
-            
+            const question = self.questions.questions[questionIndex];
+            self.ui.updateElement( "header", "Heather");
+            self.ui.updateElement("panel", question.text);
+            self.ui.updateConfig("prev", "display", "none");
+            self.ui.updateConfig("next", "display", "none");
+            self.playSound(`option${questionIndex + 1}`);
         }
         
         function onPrev(){
@@ -272,7 +285,17 @@ class App{
     }
     
     playSound( sndname ){
+        // load a sound and set it as the Audio object's buffer
+        const sound = this.speech;
         
+        const audioLoader = new THREE.AudioLoader();
+        audioLoader.load( `audio/${sndname}.mp3`, ( buffer ) => {
+            if (sound.isPlaying) sound.stop();
+            sound.setBuffer( buffer );
+            sound.setLoop( false );
+            sound.setVolume( 1.0 );
+            sound.play();
+        });
     }
     
     setupXR(){

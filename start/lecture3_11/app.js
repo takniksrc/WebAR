@@ -62,10 +62,13 @@ class App{
 		// Load a GLTF resource
 		loader.load(
 			// resource URL
-			`knight2.glb`,
+			//`knight2.glb`,
+            `chair.glb`,
 			// called when the resource is loaded
 			function ( gltf ) {
-				const object = gltf.scene.children[5];
+                //const object = gltf.scene.children[5];
+
+				const object = gltf.scene.children[1];
 				
 				object.traverse(function(child){
 					if (child.isMesh){
@@ -80,14 +83,14 @@ class App{
 					animations: gltf.animations,
 					clip: gltf.animations[0],
 					app: self,
-					name: 'knight',
+					name: 'chair',
 					npc: false
 				};
 				
 				self.knight = new Player(options);
                 self.knight.object.visible = false;
 				
-				self.knight.action = 'Dance';
+				//self.knight.action = 'Dance';
 				const scale = 0.003;
 				self.knight.object.scale.set(scale, scale, scale); 
 				

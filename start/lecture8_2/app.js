@@ -120,6 +120,32 @@ class App{
 							self.navmesh = child;
                             child.geometry.scale(scale, scale, scale);
                             child.scale.set(2,2,2);
+						}else{
+                            if ( child.name == "SD_Prop_Chest_Skull_Lid_01"){
+                                self.interactables.push( new Interactable( child, {
+                                    mode: 'tweens',
+                                    tweens:[{
+                                        target: child.quaternion,
+                                        channel: 'x',
+                                        start: 0,
+                                        end: -0.7,
+                                        duration: 1}
+                                    ]
+                                }));                       
+                            }else if ( child.name == "Door_1"){
+                                self.interactables.push( new Interactable( child, {
+                                    mode: 'tweens',
+                                    tweens:[{
+                                        target: child.quaternion,
+                                        channel: 'z',
+                                        start: 0,
+                                        end: 0.6,
+                                        duration: 1}
+                                    ]
+                                })); 
+                            }
+							child.castShadow = false;
+							child.receiveShadow = true;
 						}
 					}
 				});
@@ -272,7 +298,8 @@ class App{
         this.teleports.forEach( teleport => self.collisionObjects.push(teleport.children[0]) );
         
         //Step 2 - for each Interactable add the mesh property to the collisionObjects array.
-                    
+        this.interactables.forEach( interactable => self.collisionObjects.push( interactable.mesh ));
+       
     }
 
     intersectObjects( controller ) {
@@ -304,8 +331,11 @@ class App{
                 controller.userData.teleport = intersect.object.parent;
             }else{
                 //Step 3 - is the intersect.object an Interactable
-                
+                const tmp = this.interactables.filter( interactable => interactable.mesh == intersect.object );
+
                 //If so set the Interactable property of the controllers userData object
+                if (tmp.length>0) controller.userData.interactable = tmp[0];
+
             }
             
         } 
@@ -362,6 +392,7 @@ class App{
             });
             
             //Step 1 call update for each Interactable
+            this.interactables.forEach( interactable => interactable.update(dt) );
 
             this.player.update(dt);
         }
