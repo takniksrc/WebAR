@@ -136,7 +136,9 @@ class App{
         let controller, controller1;
         
         function onSessionStart(){
-            self.ui.mesh.position.set( 0, -0.15, -0.3 );
+           // self.ui.mesh.position.set( 0, -0.15, -0.3 );
+            self.ui.mesh.position.set( 0, 0.15, 0.3 );
+
             self.camera.add( self.ui.mesh );
         }
         
@@ -152,9 +154,7 @@ class App{
             self.ui.updateElement('info', 'tap' );
             if (!self.knight.object.visible){
                 self.knight.object.visible = true;
-                //self.knight.object.position.set( 0, -0.3, -0.5 ).add( ev.position );
-                self.knight.object.position.set( 0, 0.3, 0.5 ).add( ev.position );
-
+                self.knight.object.position.set( 0, -0.3, -0.5 ).add( ev.position );
                 self.scene.add( self.knight.object ); 
             }
         });
