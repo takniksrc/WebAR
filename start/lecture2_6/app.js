@@ -38,9 +38,9 @@ class App{
         this.loadGLTF();
         //this.loadFBX();
         
-        // this.controls = new OrbitControls( this.camera, this.renderer.domElement );
-        // this.controls.target.set(0, 3.5, 0);
-        // this.controls.update();
+        this.controls = new OrbitControls( this.camera, this.renderer.domElement );
+        this.controls.target.set(0, 3.5, 0);
+        this.controls.update();
         
         window.addEventListener('resize', this.resize.bind(this) );
 	}	
