@@ -13,47 +13,47 @@ class App{
 		const container = document.createElement( 'div' );
 		document.body.appendChild( container );
         
-		this.camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.1, 100 );
-		this.camera.position.set( 0, 4, 14 );
+        this.loadingBar = new LoadingBar();
+        this.loadingBar.visible = false;
+
+		this.assetsPath = './assets/ar-shop/';
+        
+		this.camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.01, 20 );
+		this.camera.position.set( 0, 1.6, 0 );
         
 		this.scene = new THREE.Scene();
-       // this.scene.background = new THREE.Color( 0xffffff );//0xaaaaaa
-        
-		const ambient = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 0.5);
+
+		const ambient = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 1);
+        ambient.position.set( 0.5, 1, 0.25 );
 		this.scene.add(ambient);
-        
-        const light = new THREE.DirectionalLight( 0xFFFFFF, 1.5 );
-        light.position.set( 0.2, 1, 1);
-        this.scene.add(light);
 			
 		this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true } );
 		this.renderer.setPixelRatio( window.devicePixelRatio );
 		this.renderer.setSize( window.innerWidth, window.innerHeight );
         this.renderer.outputEncoding = THREE.sRGBEncoding;
-        this.renderer.physicallyCorrectLights = true;
-        container.appendChild( this.renderer.domElement );
-		this.setEnvironment();
-		
-        this.loadingBar = new LoadingBar();
+		container.appendChild( this.renderer.domElement );
+
+
         
-       // this.loadGLTF();
-       // this.loadFBX();
+        
 
-       this.reticle = new THREE.Mesh( 
-        new THREE.RingBufferGeometry( 0.15, 0.2, 32 ).rotateX( - Math.PI / 2 ),
-        new THREE.MeshBasicMaterial()
-    );
+        this.setEnvironment();
+        
+        this.reticle = new THREE.Mesh( 
+            new THREE.RingBufferGeometry( 0.15, 0.2, 32 ).rotateX( - Math.PI / 2 ),
+            new THREE.MeshBasicMaterial()
+        );
 
-    //this.reticle.rotation.xAxis = Math.PI / 180;
-    //this.reticle.rotateX(Math.PI / 180);
-    this.reticle.matrixAutoUpdate = false;
-    this.reticle.visible = false;
-    this.scene.add( this.reticle );
+        //this.reticle.rotation.xAxis = Math.PI / 180;
+        //this.reticle.rotateX(Math.PI / 180);
+        this.reticle.matrixAutoUpdate = false;
+        this.reticle.visible = false;
+        this.scene.add( this.reticle );
 
-    
-    
-    this.setupXR();
-    this.loadGLTF();
+        
+        
+        this.setupXR();
+        this.loadGLTF();
 
         
         this.controls = new OrbitControls( this.camera, this.renderer.domElement );
