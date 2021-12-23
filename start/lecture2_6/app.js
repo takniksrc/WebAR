@@ -5,8 +5,7 @@ import { FBXLoader } from '../../libs/three124/jsm/FBXLoader.js';
 import { RGBELoader } from '../../libs/three124/jsm/RGBELoader.js';
 import { OrbitControls } from '../../libs/three124/jsm/OrbitControls.js';
 import { LoadingBar } from '../../libs/LoadingBar.js';
-import { ARButton } from '../../libs/ARButton.js'
-
+import { ARButton } from '/libs/ARButton.js'
 
 class App{
 	constructor(){
@@ -53,7 +52,6 @@ class App{
         
         
         this.setupXR();
-        
 
         
         this.controls = new OrbitControls( this.camera, this.renderer.domElement );
@@ -62,6 +60,8 @@ class App{
         
         window.addEventListener('resize', this.resize.bind(this) );
 	}	
+
+
     
     setEnvironment(){
         const loader = new RGBELoader().setDataType( THREE.UnsignedByteType );
@@ -83,34 +83,31 @@ class App{
     
     loadGLTF(){
 
+        
         this.initAR();
         this.loadingBar.visible = true;
 
-
-
-        const loader = new GLTFLoader( ).setPath('../../assets/');
+        const loader = new GLTFLoader( ).setPath('../../assets/');//ar-shop/
         const self = this;
 		
 		// Load a glTF resource
 		loader.load(
 			// resource URL
-			//'office-chair.glb',
-            `chair3.glb`,
+			'office-chair.glb',
+            //`chair3.glb`,
 			// called when the resource is loaded
 			function ( gltf ) {
                 const bbox = new THREE.Box3().setFromObject( gltf.scene );
                 console.log(`min:${bbox.min.x.toFixed(2)},${bbox.min.y.toFixed(2)},${bbox.min.z.toFixed(2)} -  max:${bbox.max.x.toFixed(2)},${bbox.max.y.toFixed(2)},${bbox.max.z.toFixed(2)}`);
                 
-                // gltf.scene.traverse( ( child ) => {
-                //     if (child.isMesh){
-                //         child.material.metalness = 0.2;
-                //     }
-                // })
+                gltf.scene.traverse( ( child ) => {
+                    if (child.isMesh){
+                        child.material.metalness = 0.2;
+                    }
+                })
                 self.chair = gltf.scene;
                 
 				self.scene.add( gltf.scene );
-
-                self.chair.visible = false; 
                 
                 self.loadingBar.visible = false;
 				
@@ -132,6 +129,10 @@ class App{
     }
     
     loadFBX(){
+
+        
+
+
         const self = this;
         const loader = new FBXLoader( ).setPath('../../assets/');
 
@@ -227,7 +228,6 @@ class App{
 
         this.loadGLTF();
     }
-
 
     initAR(){
         let currentSession = null;
