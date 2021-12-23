@@ -8,7 +8,6 @@ import { LoadingBar } from '../../libs/LoadingBar.js';
 import { Player } from '../../libs/three125/Player.js';
 import { ControllerGestures } from '../../libs/three125/ControllerGestures.js'; 
 
-
 class App{
 	constructor(){
 		const container = document.createElement( 'div' );
@@ -16,10 +15,8 @@ class App{
         
         this.clock = new THREE.Clock();
         
-		//this.camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.01, 20 );
-        this.camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.01, 20 );
-
-
+		this.camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.01, 20 );
+		
 		this.scene = new THREE.Scene();
         
         this.scene.add(this.camera);
@@ -57,19 +54,17 @@ class App{
     initScene(){
         this.loadingBar = new LoadingBar();
         
-        this.assetsPath = '../../assets/';//ar-shop/
+        this.assetsPath = '../../assets/';
         const loader = new GLTFLoader().setPath(this.assetsPath);
 		const self = this;
 		
 		// Load a GLTF resource
 		loader.load(
 			// resource URL
-			//`knight2.glb`,
-            `office-chair.glb`,
-            //`chair2.glb`,
+			`knight2.glb`,
 			// called when the resource is loaded
 			function ( gltf ) {
-				const object = gltf.scene.children[0];//5
+				const object = gltf.scene.children[5];
 				
 				object.traverse(function(child){
 					if (child.isMesh){
@@ -81,8 +76,8 @@ class App{
 				const options = {
 					object: object,
 					speed: 0.5,
-					//animations: gltf.animations,
-					//clip: gltf.animations[0],
+					animations: gltf.animations,
+					clip: gltf.animations[0],
 					app: self,
 					name: 'knight',
 					npc: false
@@ -91,7 +86,7 @@ class App{
 				self.knight = new Player(options);
                 self.knight.object.visible = false;
 				
-				//self.knight.action = 'Dance';
+				self.knight.action = 'Dance';
 				const scale = 0.003;
 				self.knight.object.scale.set(scale, scale, scale); 
 				
@@ -137,9 +132,7 @@ class App{
         let controller, controller1;
         
         function onSessionStart(){
-           // self.ui.mesh.position.set( 0, -0.15, -0.3 );
-            self.ui.mesh.position.set( 0, 0, 0 );
-
+            self.ui.mesh.position.set( 0, -0.15, -0.3 );
             self.camera.add( self.ui.mesh );
         }
         
