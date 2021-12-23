@@ -66,10 +66,10 @@ class App{
 			// resource URL
 			//`knight2.glb`,
             //`office-chair.glb`,
-            `chair1.glb`,
+            `chair2.glb`,
 			// called when the resource is loaded
 			function ( gltf ) {
-				const object = gltf.scene.children[5];
+				const object = gltf.scene.children[0];
 				
 				object.traverse(function(child){
 					if (child.isMesh){
