@@ -84,10 +84,6 @@ class App{
     loadGLTF(){
 
         this.initAR();
-
-		const loader = new GLTFLoader( ).setPath(this.assetsPath);
-        const self = this;
-        
         this.loadingBar.visible = true;
 
 
