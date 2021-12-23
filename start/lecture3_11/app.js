@@ -69,7 +69,7 @@ class App{
             //`chair2.glb`,
 			// called when the resource is loaded
 			function ( gltf ) {
-				const object = gltf.scene.children[0];
+				const object = gltf.scene.children[0];//5
 				
 				object.traverse(function(child){
 					if (child.isMesh){
@@ -138,7 +138,7 @@ class App{
         
         function onSessionStart(){
            // self.ui.mesh.position.set( 0, -0.15, -0.3 );
-            self.ui.mesh.position.set( 0, 0, 1 );
+            self.ui.mesh.position.set( 0, 0, 0 );
 
             self.camera.add( self.ui.mesh );
         }
