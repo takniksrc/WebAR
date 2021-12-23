@@ -66,7 +66,7 @@ class App{
 			// called when the resource is loaded
 			function ( gltf ) {
 				//const object = gltf.scene.children[5];
-                const object = gltf.scene.children[0];
+                const object = gltf.scene.children[5];
 
 				object.traverse(function(child){
 					if (child.isMesh){
@@ -78,7 +78,7 @@ class App{
 				const options = {
 					object: object,
 					speed: 0.5,
-					// animations: gltf.animations,
+					///animations: gltf.animations,
 					// clip: gltf.animations[0],
 					app: self,
 					name: 'knight',
