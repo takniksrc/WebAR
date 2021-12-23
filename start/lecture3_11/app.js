@@ -20,7 +20,6 @@ class App{
         this.camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.01, 20 );
 
 
-
 		this.scene = new THREE.Scene();
         
         this.scene.add(this.camera);
@@ -153,7 +152,9 @@ class App{
             self.ui.updateElement('info', 'tap' );
             if (!self.knight.object.visible){
                 self.knight.object.visible = true;
-                self.knight.object.position.set( 0, -0.3, -0.5 ).add( ev.position );
+                //self.knight.object.position.set( 0, -0.3, -0.5 ).add( ev.position );
+                self.knight.object.position.set( 0, 0.3, 0.5 ).add( ev.position );
+
                 self.scene.add( self.knight.object ); 
             }
         });
