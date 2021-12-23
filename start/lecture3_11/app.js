@@ -137,7 +137,7 @@ class App{
         
         function onSessionStart(){
            // self.ui.mesh.position.set( 0, -0.15, -0.3 );
-            self.ui.mesh.position.set( -1, 0, -1 );
+            self.ui.mesh.position.set( 1, 1, 1 );
 
             self.camera.add( self.ui.mesh );
         }
