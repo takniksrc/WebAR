@@ -1,10 +1,11 @@
 import * as THREE from '../../libs/three124/three.module.js';
-
+    
 import { GLTFLoader } from '../../libs/three124/jsm/GLTFLoader.js';
 import { FBXLoader } from '../../libs/three124/jsm/FBXLoader.js';
 import { RGBELoader } from '../../libs/three124/jsm/RGBELoader.js';
 import { OrbitControls } from '../../libs/three124/jsm/OrbitControls.js';
 import { LoadingBar } from '../../libs/LoadingBar.js';
+import { ARButton } from '../../libs/ARButton.js'
 
 
 class App{
@@ -16,7 +17,7 @@ class App{
 		this.camera.position.set( 0, 4, 14 );
         
 		this.scene = new THREE.Scene();
-        this.scene.background = new THREE.Color( 0xaaaaaa );
+       // this.scene.background = new THREE.Color( 0xffffff );//0xaaaaaa
         
 		const ambient = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 0.5);
 		this.scene.add(ambient);
@@ -35,8 +36,25 @@ class App{
 		
         this.loadingBar = new LoadingBar();
         
-        //this.loadGLTF();
-        this.loadFBX();
+       // this.loadGLTF();
+       // this.loadFBX();
+
+       this.reticle = new THREE.Mesh( 
+        new THREE.RingBufferGeometry( 0.15, 0.2, 32 ).rotateX( - Math.PI / 2 ),
+        new THREE.MeshBasicMaterial()
+    );
+
+    //this.reticle.rotation.xAxis = Math.PI / 180;
+    //this.reticle.rotateX(Math.PI / 180);
+    this.reticle.matrixAutoUpdate = false;
+    this.reticle.visible = false;
+    this.scene.add( this.reticle );
+
+    
+    
+    this.setupXR();
+    this.loadGLTF();
+
         
         this.controls = new OrbitControls( this.camera, this.renderer.domElement );
         this.controls.target.set(0, 3.5, 0);
@@ -53,7 +71,7 @@ class App{
         const self = this;
         
         loader.load( '../../assets/hdr/venice_sunset_1k.hdr', ( texture ) => {
-          const envMap = pmremGenerator.fromEquirectangular( texture ).texture;
+          const         envMap = pmremGenerator.fromEquirectangular( texture ).texture;
           pmremGenerator.dispose();
 
           self.scene.environment = envMap;
@@ -65,13 +83,23 @@ class App{
     
     loadGLTF(){
 
-        const loader = new GLTFLoader( ).setPath('../../assets/');
+        this.initAR();
+
+		const loader = new GLTFLoader( ).setPath(this.assetsPath);
+        const self = this;
+        
+        this.loadingBar.visible = true;
+
+
+
+        const loader = new GLTFLoader( ).setPath('../../assets/ar-shop/');
         const self = this;
 		
 		// Load a glTF resource
 		loader.load(
 			// resource URL
-			'office-chair.glb',
+			//'office-chair.glb',
+            `chair3.glb`,
 			// called when the resource is loaded
 			function ( gltf ) {
                 const bbox = new THREE.Box3().setFromObject( gltf.scene );
@@ -154,9 +182,156 @@ class App{
         this.renderer.setSize( window.innerWidth, window.innerHeight );  
     }
     
-	render( ) {   
-        this.chair.rotateY( 0.01 );
+	// render( ) {   
+    //     this.chair.rotateY( 0.01 );
+    //     this.renderer.render( this.scene, this.camera );
+    // }
+
+
+    setupXR(){
+        this.renderer.xr.enabled = true;
+        
+       
+		
+
+        if ( 'xr' in navigator ) {
+
+			navigator.xr.isSessionSupported( 'immersive-ar' ).then( ( supported ) => {
+
+                if (supported){
+                    const collection = document.getElementsByClassName("ar-button");
+                    [...collection].forEach( el => {
+                        el.style.display = 'block';
+                    });
+                }
+			} );
+            
+		} 
+        
+        const self = this;
+
+        this.hitTestSourceRequested = false;
+        this.hitTestSource = null;
+        
+        function onSelect() {
+            if (self.chair===undefined) return;
+            
+            if (self.reticle.visible){
+                self.chair.position.setFromMatrixPosition( self.reticle.matrix );
+                self.chair.visible = true;
+            }
+        }
+
+        this.controller = this.renderer.xr.getController( 0 );
+        this.controller.addEventListener( 'select', onSelect );
+        
+        this.scene.add( this.controller );
+    }
+
+
+    initAR(){
+        let currentSession = null;
+        const self = this;
+        
+        const sessionInit = { requiredFeatures: [ 'hit-test' ] };
+        
+        
+        function onSessionStarted( session ) {
+
+            session.addEventListener( 'end', onSessionEnded );
+
+            self.renderer.xr.setReferenceSpaceType( 'local' );
+            self.renderer.xr.setSession( session );
+       
+            currentSession = session;
+            
+        }
+
+        function onSessionEnded( ) {
+
+            currentSession.removeEventListener( 'end', onSessionEnded );
+
+            currentSession = null;
+            
+            if (self.chair !== null){
+                self.scene.remove( self.chair );
+                self.chair = null;
+            }
+            
+            self.renderer.setAnimationLoop( null );
+
+        }
+
+        if ( currentSession === null ) {
+
+            navigator.xr.requestSession( 'immersive-ar', sessionInit ).then( onSessionStarted );
+
+        } else {
+
+            currentSession.end();
+
+        }
+    }
+    
+    requestHitTestSource(){
+        const self = this;
+        
+        const session = this.renderer.xr.getSession();
+
+        session.requestReferenceSpace( 'viewer' ).then( function ( referenceSpace ) {
+            
+            session.requestHitTestSource( { space: referenceSpace } ).then( function ( source ) {
+
+                self.hitTestSource = source;
+
+            } );
+
+        } );
+
+        session.addEventListener( 'end', function () {
+
+            self.hitTestSourceRequested = false;
+            self.hitTestSource = null;
+            self.referenceSpace = null;
+
+        } );
+
+        this.hitTestSourceRequested = true;
+
+    }
+    
+    getHitTestResults( frame ){
+        const hitTestResults = frame.getHitTestResults( this.hitTestSource );
+
+        if ( hitTestResults.length ) {
+            
+            const referenceSpace = this.renderer.xr.getReferenceSpace();
+            const hit = hitTestResults[ 0 ];
+            const pose = hit.getPose( referenceSpace );
+
+            this.reticle.visible = true;
+            this.reticle.matrix.fromArray( pose.transform.matrix );
+
+        } else {
+
+            this.reticle.visible = false;
+
+        }
+
+    }
+    
+	render( timestamp, frame ) {
+
+        if ( frame ) {
+            if ( this.hitTestSourceRequested === false ) this.requestHitTestSource( )
+
+            if ( this.hitTestSource ) this.getHitTestResults( frame );
+        }
+
         this.renderer.render( this.scene, this.camera );
+        
+
+
     }
 }
 
