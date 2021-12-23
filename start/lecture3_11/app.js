@@ -57,7 +57,7 @@ class App{
     initScene(){
         this.loadingBar = new LoadingBar();
         
-        this.assetsPath = '../../assets/';
+        this.assetsPath = '../../assets/ar-shop/';
         const loader = new GLTFLoader().setPath(this.assetsPath);
 		const self = this;
 		
@@ -65,7 +65,8 @@ class App{
 		loader.load(
 			// resource URL
 			//`knight2.glb`,
-            `office-chair.glb`,
+            //`office-chair.glb`,
+            `chair1.glb`,
 			// called when the resource is loaded
 			function ( gltf ) {
 				const object = gltf.scene.children[5];
@@ -137,7 +138,7 @@ class App{
         
         function onSessionStart(){
            // self.ui.mesh.position.set( 0, -0.15, -0.3 );
-            self.ui.mesh.position.set( 1, 0, 0 );
+            self.ui.mesh.position.set( 0, 0, 0 );
 
             self.camera.add( self.ui.mesh );
         }
