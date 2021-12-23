@@ -94,18 +94,18 @@ class App{
 		// Load a glTF resource
 		loader.load(
 			// resource URL
-			'office-chair.glb',
-            //`chair3.glb`,
+			//'office-chair.glb',
+            `chair3.glb`,
 			// called when the resource is loaded
 			function ( gltf ) {
                 const bbox = new THREE.Box3().setFromObject( gltf.scene );
                 console.log(`min:${bbox.min.x.toFixed(2)},${bbox.min.y.toFixed(2)},${bbox.min.z.toFixed(2)} -  max:${bbox.max.x.toFixed(2)},${bbox.max.y.toFixed(2)},${bbox.max.z.toFixed(2)}`);
                 
-                gltf.scene.traverse( ( child ) => {
-                    if (child.isMesh){
-                        child.material.metalness = 0.2;
-                    }
-                })
+                // gltf.scene.traverse( ( child ) => {
+                //     if (child.isMesh){
+                //         child.material.metalness = 0.2;
+                //     }
+                // })
                 self.chair = gltf.scene;
                 
 				self.scene.add( gltf.scene );
