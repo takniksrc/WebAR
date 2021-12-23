@@ -53,7 +53,7 @@ class App{
         
         
         this.setupXR();
-        this.loadGLTF();
+        
 
         
         this.controls = new OrbitControls( this.camera, this.renderer.domElement );
@@ -88,14 +88,14 @@ class App{
 
 
 
-        const loader = new GLTFLoader( ).setPath('../../assets/ar-shop/');
+        const loader = new GLTFLoader( ).setPath('../../assets/');
         const self = this;
 		
 		// Load a glTF resource
 		loader.load(
 			// resource URL
-			//'office-chair.glb',
-            `chair3.glb`,
+			'office-chair.glb',
+            //`chair3.glb`,
 			// called when the resource is loaded
 			function ( gltf ) {
                 const bbox = new THREE.Box3().setFromObject( gltf.scene );
@@ -109,6 +109,8 @@ class App{
                 self.chair = gltf.scene;
                 
 				self.scene.add( gltf.scene );
+
+                self.chair.visible = false; 
                 
                 self.loadingBar.visible = false;
 				
@@ -222,6 +224,8 @@ class App{
         this.controller.addEventListener( 'select', onSelect );
         
         this.scene.add( this.controller );
+
+        this.loadGLTF();
     }
 
 
