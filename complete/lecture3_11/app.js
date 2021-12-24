@@ -15,8 +15,8 @@ class App{
         
         this.clock = new THREE.Clock();
         
-		//this.camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.01, 20 );
-		this.camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.01, 20 );
+		this.camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.01, 20 );
+		//this.camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.01, 20 );
 		
 		this.scene = new THREE.Scene();
         
@@ -136,6 +136,8 @@ class App{
         
         function onSessionStart(){
             self.ui.mesh.position.set( 0, -0.15, -0.3 );
+            self.ui.mesh.position.set( 0, 0, 0 );
+
             self.camera.add( self.ui.mesh );
         }
         
